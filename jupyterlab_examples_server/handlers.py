@@ -13,9 +13,9 @@ class RouteHandler(APIHandler):
     # Jupyter server
     @tornado.web.authenticated
     def get(self):
-        self.finish(json.dumps({
-            "data": "This is /jupyterlab-examples-server/hello endpoint!"
-        }))
+        self.finish(
+            json.dumps({"data": "This is /jupyterlab-examples-server/hello endpoint!"})
+        )
 
     @tornado.web.authenticated
     def post(self):
