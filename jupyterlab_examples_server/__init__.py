@@ -10,7 +10,7 @@ from ._form_widget import TextInputWidget  # noqa
 from ._form_widget import dict_to_form_widget  # noqa
 from ._form_widget import register_objective_form_widgets  # noqa
 from ._form_widget import register_user_attr_form_widgets  # noqa
-from ._handlers import setup_handlers
+from .handlers import setup_handlers
 from ._named_objectives import set_objective_names  # noqa
 from ._note import get_note  # noqa
 from ._note import save_note  # noqa

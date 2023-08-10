@@ -1,28 +1,28 @@
 import os
-import json
 
-from jupyter_server.base.handlers import APIHandler
+import optuna
+from bottle import Bottle
 from jupyter_server.utils import url_path_join
-import tornado
-from tornado.web import StaticFileHandler
+from tornado.web import FallbackHandler, StaticFileHandler
+from tornado.wsgi import WSGIContainer
+
+from ._app import wsgi
+
+app = Bottle()
 
 
-class RouteHandler(APIHandler):
-    # The following decorator should be present on all verb methods (head, get, post,
-    # patch, put, delete, options) to ensure only authorized user can request the
-    # Jupyter server
-    @tornado.web.authenticated
-    def get(self):
-        self.finish(
-            json.dumps({"data": "This is /jupyterlab-examples-server/hello endpoint!"})
-        )
+@app.get("/jupyterlab-examples-server/hello")
+def hello():
+    return {"data": "Hello World from Bottle!"}
 
-    @tornado.web.authenticated
-    def post(self):
-        # input_data is a dictionary with a key "name"
-        input_data = self.get_json_body()
-        data = {"greetings": "Hello {}, enjoy JupyterLab!".format(input_data["name"])}
-        self.finish(json.dumps(data))
+
+@app.post("/jupyterlab-examples-server/hello")
+def hello():
+    return {"data": "Hello World again from Bottle!"}
+
+
+storage = optuna.storages.InMemoryStorage()
+dashboard_app = wsgi(storage)
 
 
 def setup_handlers(web_app):
@@ -31,7 +31,10 @@ def setup_handlers(web_app):
     base_url = web_app.settings["base_url"]
     # Prepend the base_url so that it works in a JupyterHub setting
     route_pattern = url_path_join(base_url, "jupyterlab-examples-server", "hello")
-    handlers = [(route_pattern, RouteHandler)]
+
+    handlers = [
+        (route_pattern, FallbackHandler, dict(fallback=WSGIContainer(dashboard_app)))
+    ]
     web_app.add_handlers(host_pattern, handlers)
 
     # Prepend the base_url so that it works in a JupyterHub setting
