@@ -30,7 +30,7 @@ def setup_handlers(web_app):
 
     base_url = web_app.settings["base_url"]
     # Prepend the base_url so that it works in a JupyterHub setting
-    route_pattern = url_path_join(base_url, "jupyterlab-examples-server", "hello")
+    route_pattern = url_path_join(base_url, "jupyterlab-examples-server", r"(.*)")
 
     handlers = [
         (route_pattern, FallbackHandler, dict(fallback=WSGIContainer(dashboard_app)))
