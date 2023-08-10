@@ -1,15 +1,12 @@
-import axios from "axios"
-
-const axiosInstance = axios.create({ baseURL: API_ENDPOINT })
+import { requestAPI } from './handler';
 
 type APIMeta = {
   artifact_is_available: boolean
 }
 
 export const getMetaInfoAPI = (): Promise<APIMeta> => {
-  return axiosInstance
-    .get<APIMeta>(`/api/meta`)
-    .then<APIMeta>((res) => res.data)
+  return requestAPI<APIMeta>(`/api/meta`)
+  .then<APIMeta>((res) => res)
 }
 
 interface TrialResponse {
@@ -76,33 +73,33 @@ export const getStudyDetailAPI = (
   studyId: number,
   nLocalTrials: number
 ): Promise<StudyDetail> => {
-  return axiosInstance
-    .get<StudyDetailResponse>(`/api/studies/${studyId}`, {
-      params: {
-        after: nLocalTrials,
-      },
+  return requestAPI<StudyDetailResponse>(`/api/studies/${studyId}`, {
+      body:JSON.stringify({
+        params: {after: nLocalTrials,}
+      }),
+      method: 'GET'
     })
     .then((res) => {
-      const trials = res.data.trials.map((trial): Trial => {
+      const trials = res.trials.map((trial): Trial => {
         return convertTrialResponse(trial)
       })
-      const best_trials = res.data.best_trials.map((trial): Trial => {
+      const best_trials = res.best_trials.map((trial): Trial => {
         return convertTrialResponse(trial)
       })
       return {
         id: studyId,
-        name: res.data.name,
-        datetime_start: new Date(res.data.datetime_start),
-        directions: res.data.directions,
+        name: res.name,
+        datetime_start: new Date(res.datetime_start),
+        directions: res.directions,
         trials: trials,
         best_trials: best_trials,
-        union_search_space: res.data.union_search_space,
-        intersection_search_space: res.data.intersection_search_space,
-        union_user_attrs: res.data.union_user_attrs,
-        has_intermediate_values: res.data.has_intermediate_values,
-        note: res.data.note,
-        objective_names: res.data.objective_names,
-        form_widgets: res.data.form_widgets,
+        union_search_space: res.union_search_space,
+        intersection_search_space: res.intersection_search_space,
+        union_user_attrs: res.union_user_attrs,
+        has_intermediate_values: res.has_intermediate_values,
+        note: res.note,
+        objective_names: res.objective_names,
+        form_widgets: res.form_widgets,
       }
     })
 }
@@ -119,10 +116,9 @@ interface StudySummariesResponse {
 }
 
 export const getStudySummariesAPI = (): Promise<StudySummary[]> => {
-  return axiosInstance
-    .get<StudySummariesResponse>(`/api/studies`, {})
+  return requestAPI<StudySummariesResponse>(`/api/studies`)
     .then((res) => {
-      return res.data.study_summaries.map((study): StudySummary => {
+      return res.study_summaries.map((study): StudySummary => {
         return {
           study_id: study.study_id,
           study_name: study.study_name,
@@ -152,29 +148,33 @@ export const createNewStudyAPI = (
   studyName: string,
   directions: StudyDirection[]
 ): Promise<StudySummary> => {
-  return axiosInstance
-    .post<CreateNewStudyResponse>(`/api/studies`, {
+  return requestAPI<CreateNewStudyResponse>(`/api/studies`, {
+    body: JSON.stringify({
       study_name: studyName,
       directions,
-    })
-    .then((res) => {
-      const study_summary = res.data.study_summary
-      return {
-        study_id: study_summary.study_id,
-        study_name: study_summary.study_name,
-        directions: study_summary.directions,
-        // best_trial: undefined,
-        user_attrs: study_summary.user_attrs,
-        system_attrs: study_summary.system_attrs,
-        datetime_start: study_summary.datetime_start
-          ? new Date(study_summary.datetime_start)
-          : undefined,
-      }
-    })
+    }),
+    method: 'POST',
+  })
+  .then((res) => {
+    const study_summary = res.study_summary
+    return {
+      study_id: study_summary.study_id,
+      study_name: study_summary.study_name,
+      directions: study_summary.directions,
+      // best_trial: undefined,
+      user_attrs: study_summary.user_attrs,
+      system_attrs: study_summary.system_attrs,
+      datetime_start: study_summary.datetime_start
+        ? new Date(study_summary.datetime_start)
+        : undefined,
+    }
+  })
 }
 
 export const deleteStudyAPI = (studyId: number): Promise<void> => {
-  return axiosInstance.delete(`/api/studies/${studyId}`).then(() => {
+return requestAPI<void>(`/api/studies/${studyId}`, {
+    method: 'DELETE'
+  }).then(() => {
     return
   })
 }
@@ -192,33 +192,35 @@ export const renameStudyAPI = (
   studyId: number,
   studyName: string
 ): Promise<StudySummary> => {
-  return axiosInstance
-    .post<RenameStudyResponse>(`/api/studies/${studyId}/rename`, {
-      study_name: studyName,
-    })
-    .then((res) => {
-      return {
-        study_id: res.data.study_id,
-        study_name: res.data.study_name,
-        directions: res.data.directions,
-        user_attrs: res.data.user_attrs,
-        system_attrs: res.data.system_attrs,
-        datetime_start: res.data.datetime_start
-          ? new Date(res.data.datetime_start)
-          : undefined,
-      }
-    })
+  return requestAPI<RenameStudyResponse>(`/api/studies/${studyId}/rename`, {
+    body: JSON.stringify({ study_name: studyName }),
+    method: 'POST'
+  })
+  .then((res) => {
+    return {
+      study_id: res.study_id,
+      study_name: res.study_name,
+      directions: res.directions,
+      user_attrs: res.user_attrs,
+      system_attrs: res.system_attrs,
+      datetime_start: res.datetime_start
+        ? new Date(res.datetime_start)
+        : undefined,
+    }
+  })
 }
 
 export const saveStudyNoteAPI = (
   studyId: number,
   note: { version: number; body: string }
 ): Promise<void> => {
-  return axiosInstance
-    .put<void>(`/api/studies/${studyId}/note`, note)
-    .then(() => {
-      return
-    })
+  return requestAPI<void>(`/api/studies/${studyId}/note`, {
+    body: JSON.stringify(note),
+    method: 'PUT'
+  })
+  .then(() => {
+    return
+  })
 }
 
 export const saveTrialNoteAPI = (
@@ -226,11 +228,13 @@ export const saveTrialNoteAPI = (
   trialId: number,
   note: { version: number; body: string }
 ): Promise<void> => {
-  return axiosInstance
-    .put<void>(`/api/studies/${studyId}/${trialId}/note`, note)
-    .then(() => {
-      return
-    })
+  return requestAPI<void>(`/api/studies/${studyId}/${trialId}/note`, {
+    body: JSON.stringify(note),
+    method: 'PUT'
+  })
+  .then(() => {
+    return
+  })
 }
 
 type UploadArtifactAPIResponse = {
@@ -244,14 +248,16 @@ export const uploadArtifactAPI = (
   fileName: string,
   dataUrl: string
 ): Promise<UploadArtifactAPIResponse> => {
-  return axiosInstance
-    .post<UploadArtifactAPIResponse>(`/api/artifacts/${studyId}/${trialId}`, {
+  return requestAPI<UploadArtifactAPIResponse>(`/api/artifacts/${studyId}/${trialId}`, {
+    body: JSON.stringify({
       file: dataUrl,
       filename: fileName,
-    })
-    .then((res) => {
-      return res.data
-    })
+    }),
+    method: 'POST'
+  })
+  .then((res) => {
+    return res
+  })
 }
 
 export const deleteArtifactAPI = (
@@ -259,11 +265,12 @@ export const deleteArtifactAPI = (
   trialId: number,
   artifactId: string
 ): Promise<void> => {
-  return axiosInstance
-    .delete<void>(`/api/artifacts/${studyId}/${trialId}/${artifactId}`)
-    .then(() => {
-      return
-    })
+  return requestAPI<void>(`/api/artifacts/${studyId}/${trialId}/${artifactId}`, {
+    method: 'DELETE'
+  })
+  .then(() => {
+    return
+  })
 }
 
 export const tellTrialAPI = (
@@ -276,11 +283,13 @@ export const tellTrialAPI = (
     values: values,
   }
 
-  return axiosInstance
-    .post<void>(`/api/trials/${trialId}/tell`, req)
-    .then(() => {
-      return
-    })
+  return requestAPI<void>(`/api/trials/${trialId}/tell`, {
+    body: JSON.stringify(req),
+    method: 'POST'
+  })
+  .then(() => {
+    return
+  })
 }
 
 export const saveTrialUserAttrsAPI = (
@@ -289,11 +298,13 @@ export const saveTrialUserAttrsAPI = (
 ): Promise<void> => {
   const req = { user_attrs: user_attrs }
 
-  return axiosInstance
-    .post<void>(`/api/trials/${trialId}/user-attrs`, req)
-    .then(() => {
-      return
-    })
+  return requestAPI<void>(`/api/trials/${trialId}/user-attrs`, {
+    body: JSON.stringify(req), 
+    method:'POST'
+  })
+  .then(() => {
+    return
+  })
 }
 
 interface ParamImportancesResponse {
@@ -303,9 +314,8 @@ interface ParamImportancesResponse {
 export const getParamImportances = (
   studyId: number
 ): Promise<ParamImportance[][]> => {
-  return axiosInstance
-    .get<ParamImportancesResponse>(`/api/studies/${studyId}/param_importances`)
-    .then((res) => {
-      return res.data.param_importances
-    })
+  return requestAPI<ParamImportancesResponse>(`/api/studies/${studyId}/param_importances`)
+  .then((res) => {
+    return res.param_importances
+  })
 }
