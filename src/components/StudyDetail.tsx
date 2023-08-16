@@ -34,8 +34,10 @@ interface ParamTypes {
 }
 
 export const useURLVars = (): number => {
+  // @ts-ignore
   const { studyId } = useParams<ParamTypes>()
 
+  // @ts-ignore
   return useMemo(() => parseInt(studyId, 10), [studyId])
 }
 
