@@ -1,6 +1,6 @@
 import React, { FC, useMemo, useState, useEffect } from "react"
 import { RecoilRoot } from "recoil"
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { MemoryRouter as Router, Routes, Route } from "react-router-dom"
 import { SnackbarProvider } from "notistack"
 import blue from "@mui/material/colors/blue"
 import pink from "@mui/material/colors/pink"
