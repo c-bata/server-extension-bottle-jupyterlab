@@ -59,7 +59,7 @@ export const BestTrialsCard: FC<{
           variant="outlined"
           startIcon={<LinkIcon />}
           component={Link}
-          to={`${URL_PREFIX}/studies/${bestTrial.study_id}/trials?numbers=${bestTrial.number}`}
+          to={`/studies/${bestTrial.study_id}/trials?numbers=${bestTrial.number}`}
           sx={{ margin: theme.spacing(1) }}
         >
           Details
@@ -86,7 +86,6 @@ export const BestTrialsCard: FC<{
                 <ListItemButton
                   component={Link}
                   to={
-                    URL_PREFIX +
                     `/studies/${trial.study_id}/trials?numbers=${trial.number}`
                   }
                   sx={{ flexDirection: "column", alignItems: "flex-start" }}

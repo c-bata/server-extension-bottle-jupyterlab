@@ -11,11 +11,17 @@ import { ILauncher } from '@jupyterlab/launcher';
 
 import { requestAPI } from './handler';
 
+import { reactIcon } from '@jupyterlab/ui-components';
+import { OptunaDashboardWidget } from './widget';
+import { MainAreaWidget } from '@jupyterlab/apputils';
+
+
 /**
  * The command IDs used by the server extension plugin.
  */
 namespace CommandIDs {
   export const get = 'server:get-file';
+  export const ui = 'server:dashboard-ui';
 }
 
 /**
@@ -36,6 +42,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     console.log(
       'JupyterLab extension @jupyterlab-examples/server-extension is activated!'
     );
+    console.log('ICommandPalette:', palette);
 
     // Try avoiding awaiting in the activate function because
     // it will delay the application start up time.
@@ -50,40 +57,56 @@ const plugin: JupyterFrontEndPlugin<void> = {
       });
 
     // POST request
-    const dataToSend = { name: 'George' };
-    requestAPI<any>('hello', {
-      body: JSON.stringify(dataToSend),
-      method: 'POST'
-    })
-      .then(reply => {
-        console.log(reply);
-      })
-      .catch(reason => {
-        console.error(
-          `Error on POST /jupyterlab-examples-server/hello ${dataToSend}.\n${reason}`
-        );
-      });
+    // const dataToSend = { name: 'George' };
+    // requestAPI<any>('hello', {
+    //   body: JSON.stringify(dataToSend),
+    //   method: 'POST'
+    // })
+    //   .then(reply => {
+    //     console.log(reply);
+    //   })
+    //   .catch(reason => {
+    //     console.error(
+    //       `Error on POST /jupyterlab-examples-server/hello ${dataToSend}.\n${reason}`
+    //     );
+    //   });
 
     const { commands, shell } = app;
     const command = CommandIDs.get;
     const category = 'Extension Examples';
 
     commands.addCommand(command, {
-      label: 'Get Server Content in a IFrame Widget',
-      caption: 'Get Server Content in a IFrame Widget',
+      label: 'Foo Get Server Content in a IFrame Widget',
+      caption: 'Foo Get Server Content in a IFrame Widget',
       execute: () => {
         const widget = new IFrameWidget();
         shell.add(widget, 'main');
       }
     });
-
     palette.addItem({ command, category: category });
-
     if (launcher) {
       // Add launcher
       launcher.add({
         command: command,
         category: category
+      });
+    }
+
+    commands.addCommand(CommandIDs.ui, {
+      caption: 'Create a new React Widget',
+      label: 'React Widget',
+      icon: args => (args['isPalette'] ? undefined : reactIcon),
+      execute: () => {
+        const content = new OptunaDashboardWidget();
+        const widget = new MainAreaWidget<OptunaDashboardWidget>({ content });
+        widget.title.label = 'Optuna Dashboard Widget';
+        widget.title.icon = reactIcon;
+        shell.add(widget, 'main');
+      }
+    });
+    if (launcher) {
+      launcher.add({
+        command: CommandIDs.ui,
       });
     }
   }

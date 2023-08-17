@@ -32,7 +32,6 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import rehypeMathjax from "rehype-mathjax"
-import rehypeRaw from "rehype-raw"
 import LoadingButton from "@mui/lab/LoadingButton"
 import SaveIcon from "@mui/icons-material/Save"
 import CloseIcon from "@mui/icons-material/Close"
@@ -82,6 +81,7 @@ const CodeBlock: CodeComponent | ReactMarkdownNames = ({
   const match = /language-(\w+)/.exec(className || "")
   return !inline && match ? (
     <SyntaxHighlighter
+      // @ts-ignore
       style={darcula}
       language={match[1]}
       PreTag="div"
@@ -167,7 +167,7 @@ const MarkdownRenderer: FC<{ body: string }> = ({ body }) => (
   <ReactMarkdown
     children={body}
     remarkPlugins={[remarkGfm, remarkMath]}
-    rehypePlugins={[rehypeMathjax, rehypeRaw]}
+    rehypePlugins={[rehypeMathjax]}
     components={{
       code: CodeBlock,
       img: (props) => <img {...props} style={{ maxWidth: "100%" }} />,

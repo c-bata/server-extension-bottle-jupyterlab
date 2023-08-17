@@ -17,10 +17,8 @@ import {
 } from "@mui/material"
 import { plotlyDarkTemplate } from "./PlotlyDarkMode"
 import {
-  useFilteredTrials,
   useFilteredTrialsFromStudies,
   Target,
-  useObjectiveAndUserAttrTargets,
   useObjectiveAndUserAttrTargetsFromStudies,
 } from "../trialFilter"
 

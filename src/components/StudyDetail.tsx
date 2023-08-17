@@ -34,8 +34,10 @@ interface ParamTypes {
 }
 
 export const useURLVars = (): number => {
+  // @ts-ignore
   const { studyId } = useParams<ParamTypes>()
 
+  // @ts-ignore
   return useMemo(() => parseInt(studyId, 10), [studyId])
 }
 
@@ -164,7 +166,7 @@ export const StudyDetail: FC<{
     <>
       <IconButton
         component={Link}
-        to={URL_PREFIX + "/"}
+        to={"/"}
         sx={{ marginRight: theme.spacing(1) }}
         color="inherit"
         title="Return to the top page"
