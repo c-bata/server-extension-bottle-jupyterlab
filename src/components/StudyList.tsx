@@ -170,7 +170,7 @@ export const StudyList: FC<{
                   variant="outlined"
                   startIcon={<CompareIcon />}
                   component={Link}
-                  to={`${URL_PREFIX}/compare-studies`}
+                  to={`/compare-studies`}
                   sx={{ marginRight: theme.spacing(2), minWidth: "120px" }}
                 >
                   Compare
@@ -186,7 +186,7 @@ export const StudyList: FC<{
               >
                 <CardActionArea
                   component={Link}
-                  to={`${URL_PREFIX}/studies/${study.study_id}`}
+                  to={`/studies/${study.study_id}`}
                 >
                   <CardContent>
                     <Typography variant="h5">

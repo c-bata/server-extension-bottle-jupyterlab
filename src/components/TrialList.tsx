@@ -638,7 +638,7 @@ const getTrialListLink = (
   exclude: TrialState[],
   numbers: number[]
 ): string => {
-  const base = URL_PREFIX + `/studies/${studyId}/trials`
+  const base = `/studies/${studyId}/trials`
   if (exclude.length > 0 && numbers.length > 0) {
     return (
       base +

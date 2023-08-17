@@ -53,7 +53,7 @@ const useQueriedStudies = (
 }
 
 const getStudyListLink = (ids: number[]): string => {
-  const base = URL_PREFIX + "/compare-studies"
+  const base = "/compare-studies"
   if (ids.length > 0) {
     return base + "?ids=" + ids.map((n) => n.toString()).join(",")
   }
@@ -99,7 +99,7 @@ export const CompareStudies: FC<{
     <>
       <IconButton
         component={Link}
-        to={URL_PREFIX + "/"}
+        to={"/"}
         sx={{ marginRight: theme.spacing(1) }}
         color="inherit"
         title="Return to the top page"

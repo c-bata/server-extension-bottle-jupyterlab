@@ -173,7 +173,6 @@ export const TrialTable: FC<{
       <IconButton
         component={Link}
         to={
-          URL_PREFIX +
           `/studies/${trials[i].study_id}/trials?numbers=${trials[i].number}`
         }
         color="inherit"

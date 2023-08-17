@@ -3,10 +3,6 @@ declare module "*.png"
 declare module "*.jpg"
 declare module "*.svg"
 
-declare const APP_BAR_TITLE: string
-declare const API_ENDPOINT: string
-declare const URL_PREFIX: string
-
 type TrialValueNumber = number | "inf" | "-inf"
 type TrialIntermediateValueNumber = number | "inf" | "-inf" | "nan"
 type TrialState = "Running" | "Complete" | "Pruned" | "Fail" | "Waiting"

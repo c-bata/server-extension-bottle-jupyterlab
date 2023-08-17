@@ -184,7 +184,7 @@ export const AppDrawer: FC<{
             <ListItem key="History" disablePadding sx={styleListItem}>
               <ListItemButton
                 component={Link}
-                to={`${URL_PREFIX}/studies/${studyId}`}
+                to={`/studies/${studyId}`}
                 sx={styleListItemButton}
                 selected={page === "history"}
               >
@@ -197,7 +197,7 @@ export const AppDrawer: FC<{
             <ListItem key="Analytics" disablePadding sx={styleListItem}>
               <ListItemButton
                 component={Link}
-                to={`${URL_PREFIX}/studies/${studyId}/analytics`}
+                to={`/studies/${studyId}/analytics`}
                 sx={styleListItemButton}
                 selected={page === "analytics"}
               >
@@ -210,7 +210,7 @@ export const AppDrawer: FC<{
             <ListItem key="TableList" disablePadding sx={styleListItem}>
               <ListItemButton
                 component={Link}
-                to={`${URL_PREFIX}/studies/${studyId}/trials`}
+                to={`/studies/${studyId}/trials`}
                 sx={styleListItemButton}
                 selected={page === "trialList"}
               >
@@ -223,7 +223,7 @@ export const AppDrawer: FC<{
             <ListItem key="TrialTable" disablePadding sx={styleListItem}>
               <ListItemButton
                 component={Link}
-                to={`${URL_PREFIX}/studies/${studyId}/trialTable`}
+                to={`/studies/${studyId}/trialTable`}
                 sx={styleListItemButton}
                 selected={page === "trialTable"}
               >
@@ -236,7 +236,7 @@ export const AppDrawer: FC<{
             <ListItem key="Note" disablePadding sx={styleListItem}>
               <ListItemButton
                 component={Link}
-                to={`${URL_PREFIX}/studies/${studyId}/note`}
+                to={`/studies/${studyId}/note`}
                 sx={styleListItemButton}
                 selected={page === "note"}
               >
