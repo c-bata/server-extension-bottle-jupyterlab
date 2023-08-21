@@ -21,8 +21,15 @@ def hello():
     return {"data": "Hello World again from Bottle!"}
 
 
-storage = optuna.storages.InMemoryStorage()
-dashboard_app = wsgi(storage)
+storage = "sqlite:///db.sqlite3"
+_dashboard_app = wsgi(storage=storage)
+
+
+def dashboard_app(env, start_response):
+    # Set Content-Type
+    if "/api/" in env["PATH_INFO"]:
+        env["CONTENT_TYPE"] = "application/json"
+    return _dashboard_app(env, start_response)
 
 
 def setup_handlers(web_app):
