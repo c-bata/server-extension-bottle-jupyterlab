@@ -73,10 +73,7 @@ export const getStudyDetailAPI = (
   studyId: number,
   nLocalTrials: number
 ): Promise<StudyDetail> => {
-  return requestAPI<StudyDetailResponse>(`/api/studies/${studyId}`, {
-      body:JSON.stringify({
-        params: {after: nLocalTrials,}
-      }),
+  return requestAPI<StudyDetailResponse>(`/api/studies/${studyId}/?after=${nLocalTrials}`, {
       method: 'GET'
     })
     .then((res) => {
