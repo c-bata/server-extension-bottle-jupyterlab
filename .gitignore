@@ -126,3 +126,4 @@ dmypy.json
 yarn.lock
 
 venv/
+db.sqlite3
