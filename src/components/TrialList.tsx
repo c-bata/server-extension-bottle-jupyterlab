@@ -331,6 +331,8 @@ const TrialArtifact: FC<{ trial: Trial }> = ({ trial }) => {
   const width = "200px"
   const height = "150px"
 
+  const apiNamespace = "jupyterlab-examples-server"
+
   const inputRef = useRef<HTMLInputElement>(null)
   const handleClick: MouseEventHandler = () => {
     if (!inputRef || !inputRef.current) {
@@ -389,7 +391,7 @@ const TrialArtifact: FC<{ trial: Trial }> = ({ trial }) => {
                 <CardMedia
                   component="img"
                   height={height}
-                  image={`/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
+                  image={`/${apiNamespace}/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
                   alt={a.filename}
                 />
                 <CardContent
@@ -430,7 +432,7 @@ const TrialArtifact: FC<{ trial: Trial }> = ({ trial }) => {
                     color="inherit"
                     download={a.filename}
                     sx={{ margin: "auto 0" }}
-                    href={`/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
+                    href={`/${apiNamespace}/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
                   >
                     <DownloadIcon />
                   </IconButton>
@@ -460,7 +462,7 @@ const TrialArtifact: FC<{ trial: Trial }> = ({ trial }) => {
                 >
                   <audio controls>
                     <source
-                      src={`/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
+                      src={`/${apiNamespace}/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
                       type={a.mimetype}
                     />
                   </audio>
@@ -502,7 +504,7 @@ const TrialArtifact: FC<{ trial: Trial }> = ({ trial }) => {
                     color="inherit"
                     sx={{ margin: "auto 0" }}
                     download={a.filename}
-                    href={`/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
+                    href={`/${apiNamespace}/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
                   >
                     <DownloadIcon />
                   </IconButton>
@@ -569,7 +571,7 @@ const TrialArtifact: FC<{ trial: Trial }> = ({ trial }) => {
                     color="inherit"
                     sx={{ margin: "auto 0" }}
                     download={a.filename}
-                    href={`/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
+                    href={`/${apiNamespace}/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
                   >
                     <DownloadIcon />
                   </IconButton>
@@ -585,9 +587,8 @@ const TrialArtifact: FC<{ trial: Trial }> = ({ trial }) => {
             minHeight: height,
             margin: theme.spacing(0, 1, 1, 0),
             border: dragOver
-              ? `3px dashed ${
-                  theme.palette.mode === "dark" ? "white" : "black"
-                }`
+              ? `3px dashed ${theme.palette.mode === "dark" ? "white" : "black"
+              }`
               : `1px solid ${theme.palette.divider}`,
           }}
           onDragOver={handleDragOver}
@@ -819,15 +820,15 @@ export const TrialList: FC<{ studyDetail: StudyDetail | null }> = ({
           {selected.length === 0
             ? null
             : selected.map((t) => (
-                <TrialListDetail
-                  key={t.trial_id}
-                  trial={t}
-                  isBestTrial={isBestTrial}
-                  directions={studyDetail?.directions || []}
-                  objectiveNames={studyDetail?.objective_names || []}
-                  formWidgets={studyDetail?.form_widgets}
-                />
-              ))}
+              <TrialListDetail
+                key={t.trial_id}
+                trial={t}
+                isBestTrial={isBestTrial}
+                directions={studyDetail?.directions || []}
+                objectiveNames={studyDetail?.objective_names || []}
+                formWidgets={studyDetail?.form_widgets}
+              />
+            ))}
         </Box>
       </Box>
     </Box>

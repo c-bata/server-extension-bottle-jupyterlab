@@ -26,7 +26,8 @@ def hello():
 
 
 storage = "sqlite:///db.sqlite3"
-_dashboard_app = wsgi(storage=storage)
+artifact_store = FileSystemArtifactStore("./artifacts")
+_dashboard_app = wsgi(storage=storage, artifact_store=artifact_store)
 
 
 def dashboard_app(env, start_response):
