@@ -127,3 +127,4 @@ yarn.lock
 
 venv/
 db.sqlite3
+artifacts/
