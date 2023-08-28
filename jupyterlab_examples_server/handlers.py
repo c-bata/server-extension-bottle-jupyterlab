@@ -1,12 +1,16 @@
+import io
 import os
+import shutil
 
-import optuna
 from bottle import Bottle
 from jupyter_server.utils import url_path_join
-from tornado.web import FallbackHandler, StaticFileHandler
+from optuna.artifacts import FileSystemArtifactStore
+from tornado.web import FallbackHandler
+from tornado.web import StaticFileHandler
 from tornado.wsgi import WSGIContainer
 
 from ._app import wsgi
+
 
 app = Bottle()
 
@@ -39,9 +43,7 @@ def setup_handlers(web_app):
     # Prepend the base_url so that it works in a JupyterHub setting
     route_pattern = url_path_join(base_url, "jupyterlab-examples-server", r"(.*)")
 
-    handlers = [
-        (route_pattern, FallbackHandler, dict(fallback=WSGIContainer(dashboard_app)))
-    ]
+    handlers = [(route_pattern, FallbackHandler, dict(fallback=WSGIContainer(dashboard_app)))]
     web_app.add_handlers(host_pattern, handlers)
 
     # Prepend the base_url so that it works in a JupyterHub setting

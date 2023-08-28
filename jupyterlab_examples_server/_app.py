@@ -55,6 +55,7 @@ IMG_DIR = os.path.join(BASE_DIR, "img")
 cached_path_exists = functools.lru_cache(maxsize=10)(os.path.exists)
 API_NAMESPACE = "jupyterlab-examples-server"
 
+
 def create_app(
     storage: BaseStorage,
     artifact_store: Optional[ArtifactStore] = None,
@@ -65,11 +66,11 @@ def create_app(
     @app.hook("before_request")
     def remove_trailing_slashes_hook() -> None:
         request.environ["PATH_INFO"] = request.environ["PATH_INFO"].rstrip("/")
-    
+
     @app.get(f"/{API_NAMESPACE}/hello")
     def hello():
         return {"data": "Hello World from Optuna Dashboard!"}
-    
+
     @app.get(f"/{API_NAMESPACE}/")
     def index() -> BottleViewReturn:
         return redirect("/dashboard", 302)  # Status Found

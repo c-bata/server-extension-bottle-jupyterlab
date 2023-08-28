@@ -12,7 +12,9 @@ if TYPE_CHECKING:
     from .protocol import ArtifactBackend
 
 
-def is_artifact_backend(store: ArtifactBackend | ArtifactStore) -> TypeGuard[ArtifactBackend]:
+def is_artifact_backend(
+    store: ArtifactBackend | ArtifactStore,
+) -> TypeGuard[ArtifactBackend]:
     return getattr(store, "open_reader", None) is None
 
 
