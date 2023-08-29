@@ -55,7 +55,7 @@ def get_artifact_path(
     """Get the URL path for a given artifact ID."""
     study_id = trial.study._study_id
     trial_id = trial._trial_id
-    return f"/artifacts/{study_id}/{trial_id}/{artifact_id}"
+    return f"/{API_NAMESPACE}/artifacts/{study_id}/{trial_id}/{artifact_id}"
 
 
 def register_artifact_route(

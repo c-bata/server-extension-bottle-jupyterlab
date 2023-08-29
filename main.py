@@ -28,7 +28,7 @@ def suggest_and_generate_image(study: optuna.Study, artifact_backend: FileSystem
 
     # 3. Upload Artifact
     artifact_id = upload_artifact(artifact_backend, trial, image_path)
-    artifact_path = f"/tree/artifacts/{artifact_id}"  # get_artifact_path(trial, artifact_id)
+    artifact_path = get_artifact_path(trial, artifact_id)
 
     # 4. Save Note
     note = textwrap.dedent(
