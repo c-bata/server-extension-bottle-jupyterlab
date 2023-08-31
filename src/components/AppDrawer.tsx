@@ -315,7 +315,7 @@ export const AppDrawer: FC<{
           </ListItem>
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1 }}>
+      <Box component="main" sx={{ flexGrow: 1, height: `calc(100vh - 85px)`, overflow: "auto" }}>
         <DrawerHeader />
         {children || null}
       </Box>
