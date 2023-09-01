@@ -3,9 +3,8 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
-import { ICommandPalette, IFrame } from '@jupyterlab/apputils';
+import { ICommandPalette } from '@jupyterlab/apputils';
 
-import { PageConfig } from '@jupyterlab/coreutils';
 
 import { ILauncher } from '@jupyterlab/launcher';
 
@@ -57,40 +56,19 @@ const plugin: JupyterFrontEndPlugin<void> = {
       });
 
     // POST request
-    // const dataToSend = { name: 'George' };
-    // requestAPI<any>('hello', {
-    //   body: JSON.stringify(dataToSend),
-    //   method: 'POST'
-    // })
-    //   .then(reply => {
-    //     console.log(reply);
-    //   })
-    //   .catch(reason => {
-    //     console.error(
-    //       `Error on POST /jupyterlab-examples-server/hello ${dataToSend}.\n${reason}`
-    //     );
-    //   });
+    const dataToSend = { name: 'George' };
+    requestAPI<any>('init', {
+       body: JSON.stringify(dataToSend),
+       method: 'POST'
+     }).then(reply => {
+      console.log(reply);
+    }).catch(reason => {
+      console.error(
+        `Error on POST /jupyterlab-examples-server/hello ${dataToSend}.\n${reason}`
+      );
+    });
 
     const { commands, shell } = app;
-    const command = CommandIDs.get;
-    const category = 'Extension Examples';
-
-    commands.addCommand(command, {
-      label: 'Foo Get Server Content in a IFrame Widget',
-      caption: 'Foo Get Server Content in a IFrame Widget',
-      execute: () => {
-        const widget = new IFrameWidget();
-        shell.add(widget, 'main');
-      }
-    });
-    palette.addItem({ command, category: category });
-    if (launcher) {
-      // Add launcher
-      launcher.add({
-        command: command,
-        category: category
-      });
-    }
 
     commands.addCommand(CommandIDs.ui, {
       caption: 'Create a new React Widget',
@@ -114,14 +92,3 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
 export default plugin;
 
-class IFrameWidget extends IFrame {
-  constructor() {
-    super();
-    const baseUrl = PageConfig.getBaseUrl();
-    this.url = baseUrl + 'jupyterlab-examples-server/public/index.html';
-    this.id = 'doc-example';
-    this.title.label = 'Server Doc';
-    this.title.closable = true;
-    this.node.style.overflowY = 'auto';
-  }
-}
