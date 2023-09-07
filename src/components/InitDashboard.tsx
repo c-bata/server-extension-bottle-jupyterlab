@@ -1,4 +1,3 @@
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import {
     Box,
     Button,
@@ -6,10 +5,9 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
-    useTheme
+    DialogTitle
 } from "@mui/material";
-import { Dispatch, FC, default as React, ReactNode, SetStateAction, useState } from "react";
+import { Dispatch, FC, default as React, SetStateAction, useState } from "react";
 import { requestAPI } from '.././handler';
 import { DebouncedInputTextField } from "./Debounce";
 const initializeDashboardAPI = (
@@ -39,11 +37,11 @@ const initializeDashboard = (storageURL: string, artifactPath: string, setIsInit
 }
 
 
-export const useCreateDashboardDialog = (setIsInitialized: Dispatch<SetStateAction<boolean>>): [() => void, () => ReactNode] => {
+export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>> }> = ({ setIsInitialized }) => {
 
     const [storageURL, setstorageURL] = useState("")
     const [artifactPath, setartifactPath] = useState("")
-    const [openNewDashboardDialog, setOpenNewDashboardDialog] = useState(false)
+    const [openNewDashboardDialog, setOpenNewDashboardDialog] = useState(true)
 
     const handleCloseNewDashboardDialog = () => {
         setOpenNewDashboardDialog(false)
@@ -54,12 +52,8 @@ export const useCreateDashboardDialog = (setIsInitialized: Dispatch<SetStateActi
         setOpenNewDashboardDialog(false)
     }
 
-    const openDialog = () => {
-        setOpenNewDashboardDialog(true)
-    }
-
-    const renderCreateNewDashboardDialog = () => {
-        return (
+    return (
+        <Box sx={{ display: "flex" }}>
             <Dialog
                 open={openNewDashboardDialog}
                 onClose={() => {
@@ -110,30 +104,6 @@ export const useCreateDashboardDialog = (setIsInitialized: Dispatch<SetStateActi
                     </Button>
                 </DialogActions>
             </Dialog>
-        )
-    }
-    return [openDialog, renderCreateNewDashboardDialog]
-}
-
-
-export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>> }> = ({ setIsInitialized }) => {
-    const theme = useTheme()
-    const [openCreateDashboardDialog, renderCreateDashboardDialog] =
-        useCreateDashboardDialog(setIsInitialized)
-    return (
-        <Box sx={{ display: "flex" }}>
-            <h1>Configure Storage and Artifact</h1>
-            <Button
-                variant="outlined"
-                startIcon={<PlayCircleOutlineIcon />}
-                onClick={() => {
-                    openCreateDashboardDialog()
-                }}
-                sx={{ marginRight: theme.spacing(2), minWidth: "120px" }}
-            >
-                Start
-            </Button>
-            {renderCreateDashboardDialog()}
         </Box>
     )
 }
