@@ -10,6 +10,7 @@ import {
 import { Dispatch, FC, default as React, SetStateAction, useState } from "react";
 import { requestAPI } from '.././handler';
 import { DebouncedInputTextField } from "./Debounce";
+
 const initializeDashboardAPI = (
     storageURL: string, artifactPath: string
 ): Promise<void> => {
@@ -24,11 +25,10 @@ const initializeDashboardAPI = (
     })
 }
 
-const initializeDashboard = (storageURL: string, artifactPath: string, setIsInitialized: Dispatch<SetStateAction<boolean>>) => {
+const initializeDashboard = (storageURL: string, artifactPath: string) => {
 
     initializeDashboardAPI(storageURL, artifactPath)
         .then(() => {
-            setIsInitialized(true)
             return
         })
         .catch((err) => {
@@ -48,8 +48,9 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
     }
 
     const handleCreateNewDashboard = () => {
-        initializeDashboard(storageURL, artifactPath, setIsInitialized)
+        initializeDashboard(storageURL, artifactPath)
         setOpenNewDashboardDialog(false)
+        setIsInitialized(true)
     }
 
     return (
