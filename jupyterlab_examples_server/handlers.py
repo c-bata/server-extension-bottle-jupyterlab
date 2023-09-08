@@ -1,6 +1,3 @@
-import io
-import shutil
-
 from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join
 from optuna.artifacts import FileSystemArtifactStore
@@ -35,18 +32,6 @@ def dashboard_app(env, start_response):
     # Set Content-Type
     if "/api/" in env["PATH_INFO"]:
         env["CONTENT_TYPE"] = "application/json"
-
-    print("---------------- DEBUG WSGI Environment ------------")
-    print(env)
-
-    buf = io.BytesIO()
-    shutil.copyfileobj(env["wsgi.input"], buf)
-    buf.seek(0)
-    print("---------------- DEBUG Request Body ----------------")
-    print(buf.read().decode("utf-8"))
-
-    buf.seek(0)
-    env["wsgi.input"] = buf
     return _dashboard_app(env, start_response)
 
 
