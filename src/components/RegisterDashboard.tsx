@@ -31,7 +31,10 @@ export const RegisterDashboard: FC = () => {
         )
     } else {
         return (
-            <InitDashboard setIsInitialized={setIsInitialized} />
+            <InitDashboard
+                setIsInitialized={setIsInitialized}
+                setLoading={setLoading}
+            />
         )
     }
 }

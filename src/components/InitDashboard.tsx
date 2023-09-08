@@ -11,21 +11,7 @@ import { Dispatch, FC, default as React, SetStateAction, useState } from "react"
 import { requestAPI } from '.././handler';
 import { DebouncedInputTextField } from "./Debounce";
 
-const initializeDashboardAPI = (
-    storageURL: string, artifactPath: string
-): Promise<void> => {
-    return requestAPI<void>(`/api/register_dashboard_app`, {
-        body: JSON.stringify({
-            storage_url: storageURL,
-            artifact_path: artifactPath,
-        }),
-        method: 'POST',
-    }).then(() => {
-        return
-    })
-}
-
-export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>> }> = ({ setIsInitialized }) => {
+export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>>, setLoading: Dispatch<SetStateAction<boolean>> }> = ({ setIsInitialized, setLoading }) => {
 
     const [storageURL, setstorageURL] = useState("")
     const [artifactPath, setartifactPath] = useState("")
@@ -36,19 +22,29 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
     }
 
     const handleCreateNewDashboard = () => {
-        initializeDashboardAPI(storageURL, artifactPath)
         setOpenNewDashboardDialog(false)
+        setLoading(true)
 
-        requestAPI<void>(`/api/is_initialized`, {
+        requestAPI<void>(`/api/register_dashboard_app`, {
             body: JSON.stringify({
-                is_initialized: true,
+                storage_url: storageURL,
+                artifact_path: artifactPath,
             }),
             method: 'POST',
         }).then(() => {
-            setIsInitialized(true)
+            return requestAPI<void>(`/api/is_initialized`, {
+                body: JSON.stringify({
+                    is_initialized: true,
+                }),
+                method: 'POST',
+            }).then(() => {
+                setLoading(false)
+                setIsInitialized(true)
+            })
         }).catch((err) => {
             console.log(err)
         })
+
     }
 
     return (
