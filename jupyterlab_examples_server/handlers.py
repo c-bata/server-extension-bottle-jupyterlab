@@ -1,3 +1,5 @@
+import json
+
 from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join
 from optuna.artifacts import FileSystemArtifactStore
@@ -11,6 +13,7 @@ from ._app import wsgi
 
 
 _dashboard_app = wsgi(storage=InMemoryStorage())
+_is_initialized = False
 
 
 class RouteHandler(APIHandler):
@@ -28,6 +31,17 @@ class RouteHandler(APIHandler):
         _dashboard_app = wsgi(storage=storage, artifact_store=artifact_store)
 
 
+class InitializedStateHandler(APIHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.finish(json.dumps({"is_initialized": _is_initialized}))
+
+    @tornado.web.authenticated
+    def post(self):
+        global _is_initialized
+        _is_initialized = self.get_json_body().get("is_initialized") is True
+
+
 def dashboard_app(env, start_response):
     # Set Content-Type
     if "/api/" in env["PATH_INFO"]:
@@ -40,8 +54,12 @@ def setup_handlers(web_app):
 
     base_url = web_app.settings["base_url"]
     # Prepend the base_url so that it works in a JupyterHub setting
-    init_route_pattern = url_path_join(base_url, API_NAMESPACE, "api/register_dashboard_app")
-    handlers = [(init_route_pattern, RouteHandler)]
+    initialize_route_pattern = url_path_join(base_url, API_NAMESPACE, "api/is_initialized")
+    handlers = [(initialize_route_pattern, InitializedStateHandler)]
+    web_app.add_handlers(host_pattern, handlers)
+
+    resister_route_pattern = url_path_join(base_url, API_NAMESPACE, "api/register_dashboard_app")
+    handlers = [(resister_route_pattern, RouteHandler)]
     web_app.add_handlers(host_pattern, handlers)
 
     route_pattern = url_path_join(base_url, API_NAMESPACE, r"(.*)")

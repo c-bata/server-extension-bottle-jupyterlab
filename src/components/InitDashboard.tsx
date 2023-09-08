@@ -50,7 +50,17 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
     const handleCreateNewDashboard = () => {
         initializeDashboard(storageURL, artifactPath)
         setOpenNewDashboardDialog(false)
-        setIsInitialized(true)
+
+        requestAPI<void>(`/api/is_initialized`, {
+            body: JSON.stringify({
+                is_initialized: true,
+            }),
+            method: 'POST',
+        }).then(() => {
+            setIsInitialized(true)
+        }).catch((err) => {
+            console.log(err)
+        })
     }
 
     return (

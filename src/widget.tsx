@@ -2,29 +2,39 @@ import { ReactWidget } from '@jupyterlab/ui-components';
 import React, { useState } from 'react';
 import { App } from './components/App';
 import { InitDashboard } from './components/InitDashboard';
-//import { requestAPI } from './handler';
+import { requestAPI } from './handler';
 
+
+interface isInitializedResponce {
+  is_initialized: boolean
+}
 
 const RegisterDashboard = () => {
-  //const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [isInitialized, setIsInitialized] = useState(false)
 
-  //requestAPI<boolean>(`/api/register_dashboard_app`, {
-  //  method: 'GET',
-  //}).then((res) => {
-  //  setIsInitialized(res);
-  //}).catch((err) => {
-  //  console.log(err)
-  //})
+  requestAPI<isInitializedResponce>(`/api/is_initialized`, {
+    method: 'GET',
+  }).then((res) => {
+    setIsInitialized(res.is_initialized)
+    setLoading(false)
+  }).catch((err) => {
+    console.log(err)
+  })
 
-  if (!isInitialized) {
+  if (loading) {
     return (
-      <InitDashboard setIsInitialized={setIsInitialized} />
+      <div>Loading...</div>
     )
-  } else
+  } else if (isInitialized) {
     return (
       <App />
     )
+  } else {
+    return (
+      <InitDashboard setIsInitialized={setIsInitialized} />
+    )
+  }
 }
 
 export class OptunaDashboardWidget extends ReactWidget {
