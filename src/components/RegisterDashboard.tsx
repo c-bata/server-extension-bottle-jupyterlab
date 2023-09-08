@@ -1,14 +1,14 @@
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import React, { FC, useState } from 'react';
 import { requestAPI } from '../handler';
 import { App } from './App';
 import { InitDashboard } from './InitDashboard';
-import { Loading } from './Loading';
 
 
 interface IsInitializedResponce {
     is_initialized: boolean
 }
-
 
 export const RegisterDashboard: FC = () => {
     const [loading, setLoading] = useState(true)
@@ -24,7 +24,17 @@ export const RegisterDashboard: FC = () => {
     })
 
     if (loading) {
-        return (<Loading />)
+        return (
+            <Box sx={{
+                height: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <CircularProgress />
+            </Box>
+        )
     } else if (isInitialized) {
         return (
             <App />

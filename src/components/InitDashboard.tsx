@@ -44,7 +44,6 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
         }).catch((err) => {
             console.log(err)
         })
-
     }
 
     return (
