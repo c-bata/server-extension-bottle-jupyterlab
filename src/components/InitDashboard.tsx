@@ -25,18 +25,6 @@ const initializeDashboardAPI = (
     })
 }
 
-const initializeDashboard = (storageURL: string, artifactPath: string) => {
-
-    initializeDashboardAPI(storageURL, artifactPath)
-        .then(() => {
-            return
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-}
-
-
 export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>> }> = ({ setIsInitialized }) => {
 
     const [storageURL, setstorageURL] = useState("")
@@ -48,7 +36,7 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
     }
 
     const handleCreateNewDashboard = () => {
-        initializeDashboard(storageURL, artifactPath)
+        initializeDashboardAPI(storageURL, artifactPath)
         setOpenNewDashboardDialog(false)
 
         requestAPI<void>(`/api/is_initialized`, {
