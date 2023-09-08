@@ -53,6 +53,7 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
                 onClose={() => {
                     handleCloseNewDashboardDialog()
                 }}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleCreateNewDashboard() }}
                 aria-labelledby="initialize-dashboard-dialog-title"
             >
                 <DialogTitle id="initialize-dashboard-dialog-title">New Dashboard</DialogTitle>
