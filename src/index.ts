@@ -4,13 +4,13 @@ import {
 } from '@jupyterlab/application';
 
 import { ICommandPalette } from '@jupyterlab/apputils';
-
+import optunaLogo from '../img/optuna_logo.svg';
 
 import { ILauncher } from '@jupyterlab/launcher';
+import { LabIcon } from '@jupyterlab/ui-components';
 
 
 import { MainAreaWidget } from '@jupyterlab/apputils';
-import { reactIcon } from '@jupyterlab/ui-components';
 import { OptunaDashboardWidget } from './widget';
 
 
@@ -44,16 +44,18 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
 
     const { commands, shell } = app;
+    const optunaIcon = new LabIcon({ name: 'ui-components:optuna', svgstr: optunaLogo });
+    
 
     commands.addCommand(CommandIDs.ui, {
-      caption: 'Create a new React Widget',
-      label: 'React Widget',
-      icon: args => (args['isPalette'] ? undefined : reactIcon),
+      caption: 'Launch Optuna Dashboard',
+      label: 'Optuna Dashboard',
+      icon: args => (args['isPalette'] ? undefined : optunaIcon),
       execute: () => {
         const content = new OptunaDashboardWidget();
         const widget = new MainAreaWidget<OptunaDashboardWidget>({ content });
         widget.title.label = 'Optuna Dashboard Widget';
-        widget.title.icon = reactIcon;
+        widget.title.icon = optunaIcon;
         shell.add(widget, 'main');
       }
     });
