@@ -6,7 +6,7 @@ import { App } from './App';
 import { InitDashboard } from './InitDashboard';
 
 
-interface IsInitializedResponce {
+interface IsInitializedResponse {
     is_initialized: boolean
 }
 
@@ -14,7 +14,7 @@ export const RegisterDashboard: FC = () => {
     const [loading, setLoading] = useState(true)
     const [isInitialized, setIsInitialized] = useState(false)
 
-    requestAPI<IsInitializedResponce>(`/api/is_initialized`, {
+    requestAPI<IsInitializedResponse>(`/api/is_initialized`, {
         method: 'GET',
     }).then((res) => {
         setIsInitialized(res.is_initialized)
