@@ -38,7 +38,6 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
                 }),
                 method: 'POST',
             }).then(() => {
-                setLoading(false)
                 setIsInitialized(true)
             })
         }).catch((err) => {

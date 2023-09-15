@@ -1,4 +1,9 @@
+from __future__ import annotations
+
+import io
 import json
+import shutil
+from typing import TYPE_CHECKING
 
 from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join
@@ -11,9 +16,13 @@ from tornado.wsgi import WSGIContainer
 from ._app import wsgi
 
 
+if TYPE_CHECKING:
+    from _typeshed.wsgi import WSGIApplication
+
+
 API_NAMESPACE = "jupyterlab-examples-server"
 
-_dashboard_app = wsgi(storage=InMemoryStorage())
+_dashboard_app: WSGIApplication | None = None  # wsgi(storage=InMemoryStorage())
 _is_initialized = False
 
 
@@ -48,6 +57,22 @@ def dashboard_app(env, start_response):
     if "/api/" in env["PATH_INFO"]:
         env["CONTENT_TYPE"] = "application/json"
     env["PATH_INFO"] = env["PATH_INFO"].replace(f"/{API_NAMESPACE}", "")
+
+    if _dashboard_app is None:
+        start_response("400 Bad Request", [{"Content-Type": "application/json"}])
+        return [b'{"reason": "something error message..."}']
+
+    print("---------------- DEBUG WSGI Environment ------------")
+    print(env)
+
+    buf = io.BytesIO()
+    shutil.copyfileobj(env["wsgi.input"], buf)
+    buf.seek(0)
+    print("---------------- DEBUG Request Body ----------------")
+    print(buf.read().decode("utf-8"))
+
+    buf.seek(0)
+    env["wsgi.input"] = buf
 
     return _dashboard_app(env, start_response)
 
