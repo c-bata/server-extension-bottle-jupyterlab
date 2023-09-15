@@ -53,7 +53,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "public")
 IMG_DIR = os.path.join(BASE_DIR, "img")
 cached_path_exists = functools.lru_cache(maxsize=10)(os.path.exists)
-API_NAMESPACE = "jupyterlab-examples-server"
 
 
 def create_app(
@@ -67,27 +66,27 @@ def create_app(
     def remove_trailing_slashes_hook() -> None:
         request.environ["PATH_INFO"] = request.environ["PATH_INFO"].rstrip("/")
 
-    @app.get(f"/{API_NAMESPACE}/hello")
+    @app.get("/hello")
     def hello():
         return {"data": "Hello World from Optuna Dashboard!"}
 
-    @app.get(f"/{API_NAMESPACE}/")
+    @app.get("/")
     def index() -> BottleViewReturn:
         return redirect("/dashboard", 302)  # Status Found
 
     # Accept any following paths for client-side routing
-    @app.get(f"/{API_NAMESPACE}/dashboard<:re:(/.*)?>")
+    @app.get("/dashboard<:re:(/.*)?>")
     def dashboard() -> BottleViewReturn:
         return static_file("index.html", BASE_DIR, mimetype="text/html")
 
-    @app.get(f"/{API_NAMESPACE}/api/meta")
+    @app.get("/api/meta")
     @json_api_view
     def api_meta() -> dict[str, Any]:
         return {
             "artifact_is_available": artifact_store is not None,
         }
 
-    @app.get(f"/{API_NAMESPACE}/api/studies")
+    @app.get("/api/studies")
     @json_api_view
     def list_study_summaries() -> dict[str, Any]:
         summaries = get_study_summaries(storage)
@@ -96,7 +95,7 @@ def create_app(
             "study_summaries": serialized,
         }
 
-    @app.post(f"/{API_NAMESPACE}/api/studies")
+    @app.post("/api/studies")
     @json_api_view
     def create_study() -> dict[str, Any]:
         study_name = request.json.get("study_name", None)
@@ -126,7 +125,7 @@ def create_app(
         response.status = 201  # Created
         return {"study_summary": serialize_study_summary(summary)}
 
-    @app.post(f"/{API_NAMESPACE}/api/studies/<study_id:int>/rename")
+    @app.post("/api/studies/<study_id:int>/rename")
     @json_api_view
     def rename_study(study_id: int) -> dict[str, Any]:
         dst_study_name = request.json.get("study_name", None)
@@ -161,7 +160,7 @@ def create_app(
         response.status = 201
         return serialize_study_summary(new_study_summary)
 
-    @app.delete(f"/{API_NAMESPACE}/api/studies/<study_id:int>")
+    @app.delete("/api/studies/<study_id:int>")
     @json_api_view
     def delete_study(study_id: int) -> dict[str, Any]:
         if artifact_store is not None:
@@ -175,7 +174,7 @@ def create_app(
         response.status = 204  # No content
         return {}
 
-    @app.get(f"/{API_NAMESPACE}/api/studies/<study_id:int>")
+    @app.get("/api/studies/<study_id:int>")
     @json_api_view
     def get_study_detail(study_id: int) -> dict[str, Any]:
         try:
@@ -218,7 +217,7 @@ def create_app(
             has_intermediate_values,
         )
 
-    @app.get(f"/{API_NAMESPACE}/api/studies/<study_id:int>/param_importances")
+    @app.get("/api/studies/<study_id:int>/param_importances")
     @json_api_view
     def get_param_importances(study_id: int) -> dict[str, Any]:
         try:
@@ -238,7 +237,7 @@ def create_app(
             response.status = 400  # Bad request
             return {"reason": str(e)}
 
-    @app.put(f"/{API_NAMESPACE}/api/studies/<study_id:int>/note")
+    @app.put("/api/studies/<study_id:int>/note")
     @json_api_view
     def save_study_note(study_id: int) -> dict[str, Any]:
         req_note_ver = request.json.get("version", None)
@@ -260,7 +259,7 @@ def create_app(
         response.status = 204  # No content
         return {}
 
-    @app.post(f"/{API_NAMESPACE}/api/trials/<trial_id:int>/tell")
+    @app.post("/api/trials/<trial_id:int>/tell")
     @json_api_view
     def tell_trial(trial_id: int) -> dict[str, Any]:
         if "state" not in request.json:
@@ -298,7 +297,7 @@ def create_app(
         response.status = 204
         return {}
 
-    @app.post(f"/{API_NAMESPACE}/api/trials/<trial_id:int>/user-attrs")
+    @app.post("/api/trials/<trial_id:int>/user-attrs")
     @json_api_view
     def save_trial_user_attrs(trial_id: int) -> dict[str, Any]:
         user_attrs = request.json.get("user_attrs", {})
@@ -316,7 +315,7 @@ def create_app(
         response.status = 204
         return {}
 
-    @app.put(f"/{API_NAMESPACE}/api/studies/<study_id:int>/<trial_id:int>/note")
+    @app.put("/api/studies/<study_id:int>/<trial_id:int>/note")
     @json_api_view
     def save_trial_note(study_id: int, trial_id: int) -> dict[str, Any]:
         req_note_ver = request.json.get("version", None)
@@ -339,13 +338,13 @@ def create_app(
         response.status = 204  # No content
         return {}
 
-    @app.get(f"/{API_NAMESPACE}/favicon.ico")
+    @app.get("/favicon.ico")
     def favicon() -> BottleViewReturn:
         use_gzip = "gzip" in request.headers["Accept-Encoding"]
         filename = "favicon.ico.gz" if use_gzip else "favicon.ico"
         return static_file(filename, IMG_DIR)
 
-    @app.get(f"/{API_NAMESPACE}/static/<filename:path>")
+    @app.get("/static/<filename:path>")
     def send_static(filename: str) -> BottleViewReturn:
         if not debug and "gzip" in request.headers["Accept-Encoding"]:
             gz_filename = filename.strip("/\\") + ".gz"

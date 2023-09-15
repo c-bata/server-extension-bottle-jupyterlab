@@ -40,7 +40,6 @@ if TYPE_CHECKING:
         },
     )
 
-API_NAMESPACE = "jupyterlab-examples-server"
 ARTIFACTS_ATTR_PREFIX = "dashboard:artifacts:"
 DEFAULT_MIME_TYPE = "application/octet-stream"
 BaseRequest.MEMFILE_MAX = int(
@@ -55,15 +54,13 @@ def get_artifact_path(
     """Get the URL path for a given artifact ID."""
     study_id = trial.study._study_id
     trial_id = trial._trial_id
-    return f"/{API_NAMESPACE}/artifacts/{study_id}/{trial_id}/{artifact_id}"
+    return f"/artifacts/{study_id}/{trial_id}/{artifact_id}"
 
 
 def register_artifact_route(
     app: Bottle, storage: BaseStorage, artifact_store: Optional[ArtifactStore]
 ) -> None:
-    @app.get(
-        f"/{API_NAMESPACE}/artifacts/<study_id:int>/<trial_id:int>/<artifact_id:re:[0-9a-fA-F-]+>"
-    )
+    @app.get("/artifacts/<study_id:int>/<trial_id:int>/<artifact_id:re:[0-9a-fA-F-]+>")
     def proxy_artifact(study_id: int, trial_id: int, artifact_id: str) -> HTTPResponse | bytes:
         if artifact_store is None:
             response.status = 400  # Bad Request
@@ -80,7 +77,7 @@ def register_artifact_route(
         fp = artifact_store.open_reader(artifact_id)
         return HTTPResponse(fp, headers=headers)
 
-    @app.post(f"/{API_NAMESPACE}/api/artifacts/<study_id:int>/<trial_id:int>")
+    @app.post("/api/artifacts/<study_id:int>/<trial_id:int>")
     @json_api_view
     def upload_artifact_api(study_id: int, trial_id: int) -> dict[str, Any]:
         # TODO(c-bata): Use optuna.artifacts.upload_artifact()
@@ -117,9 +114,7 @@ def register_artifact_route(
             "artifacts": list_trial_artifacts(storage.get_study_system_attrs(study_id), trial),
         }
 
-    @app.delete(
-        f"/{API_NAMESPACE}/api/artifacts/<study_id:int>/<trial_id:int>/<artifact_id:re:[0-9a-fA-F-]+>"
-    )
+    @app.delete("/api/artifacts/<study_id:int>/<trial_id:int>/<artifact_id:re:[0-9a-fA-F-]+>")
     @json_api_view
     def delete_artifact(study_id: int, trial_id: int, artifact_id: str) -> dict[str, Any]:
         if artifact_store is None:

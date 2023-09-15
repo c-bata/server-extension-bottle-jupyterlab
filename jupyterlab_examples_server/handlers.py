@@ -8,9 +8,10 @@ import tornado
 from tornado.web import FallbackHandler
 from tornado.wsgi import WSGIContainer
 
-from ._app import API_NAMESPACE
 from ._app import wsgi
 
+
+API_NAMESPACE = "jupyterlab-examples-server"
 
 _dashboard_app = wsgi(storage=InMemoryStorage())
 _is_initialized = False
@@ -46,6 +47,8 @@ def dashboard_app(env, start_response):
     # Set Content-Type
     if "/api/" in env["PATH_INFO"]:
         env["CONTENT_TYPE"] = "application/json"
+    env["PATH_INFO"] = env["PATH_INFO"].replace(f"/{API_NAMESPACE}", "")
+
     return _dashboard_app(env, start_response)
 
 
