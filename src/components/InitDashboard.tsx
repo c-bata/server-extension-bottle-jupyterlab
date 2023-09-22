@@ -58,7 +58,7 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
                 <DialogTitle id="initialize-dashboard-dialog-title">New Dashboard</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Please enter the study name and directions here.
+                        Please enter a storage url and an artifact path.
                     </DialogContentText>
                     <DebouncedInputTextField
                         onChange={(s) => {
