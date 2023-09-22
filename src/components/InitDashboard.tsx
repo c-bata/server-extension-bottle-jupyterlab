@@ -80,7 +80,7 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
                         textFieldProps={{
                             autoFocus: true,
                             fullWidth: true,
-                            label: "Artifact path",
+                            label: "Artifact path (Optional)",
                             type: "text",
                         }}
                     />
