@@ -13,9 +13,11 @@ import { DebouncedInputTextField } from "./Debounce";
 
 export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>>, setLoading: Dispatch<SetStateAction<boolean>> }> = ({ setIsInitialized, setLoading }) => {
 
-    const [storageURL, setstorageURL] = useState("")
-    const [artifactPath, setartifactPath] = useState("")
+    const [storageURL, setStorageURL] = useState("")
+    const [artifactPath, setArtifactPath] = useState("")
     const [openNewDashboardDialog, setOpenNewDashboardDialog] = useState(true)
+    const [isValidURL, setIsValidURL] = useState(false)
+
 
     const handleCloseNewDashboardDialog = () => {
         setOpenNewDashboardDialog(false)
@@ -44,6 +46,9 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
             console.log(err)
         })
     }
+    const handleValidateURL = (url: string) => {
+        url.startsWith("redis") ? setIsValidURL(true) : setIsValidURL(false)
+    }
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -62,7 +67,8 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
                     </DialogContentText>
                     <DebouncedInputTextField
                         onChange={(s) => {
-                            setstorageURL(s)
+                            handleValidateURL(s)
+                            setStorageURL(s)
                         }}
                         delay={500}
                         textFieldProps={{
@@ -70,11 +76,12 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
                             fullWidth: true,
                             label: "Storage URL",
                             type: "text",
+                            sx: { margin: "4px 0" }
                         }}
                     />
                     <DebouncedInputTextField
                         onChange={(s) => {
-                            setartifactPath(s)
+                            setArtifactPath(s)
                         }}
                         delay={500}
                         textFieldProps={{
@@ -82,7 +89,9 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
                             fullWidth: true,
                             label: "Artifact path (Optional)",
                             type: "text",
+                            sx: { margin: "4px 0" }
                         }}
+
                     />
                 </DialogContent>
 
@@ -93,6 +102,7 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
                     <Button
                         onClick={handleCreateNewDashboard}
                         color="primary"
+                        disabled={!isValidURL}
                     >
                         Create
                     </Button>
