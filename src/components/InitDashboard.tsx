@@ -17,6 +17,7 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
     const [artifactPath, setArtifactPath] = useState("")
     const [openNewDashboardDialog, setOpenNewDashboardDialog] = useState(true)
     const [isValidURL, setIsValidURL] = useState(false)
+    const rfc1738Pattern = new RegExp(`[\\w\\+]+://([^:/]*(.*)?@)?((\\[[^/]+\\]|[^/:]+)?([^/]*)?)?(/.*)?`);
 
 
     const handleCloseNewDashboardDialog = () => {
@@ -47,7 +48,7 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
         })
     }
     const handleValidateURL = (url: string) => {
-        url.startsWith("redis") ? setIsValidURL(true) : setIsValidURL(false)
+        url.startsWith("redis") || url.match(rfc1738Pattern) ? setIsValidURL(true) : setIsValidURL(false)
     }
 
     return (
