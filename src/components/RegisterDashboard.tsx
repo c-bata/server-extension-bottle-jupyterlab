@@ -13,11 +13,12 @@ interface IsInitializedResponse {
 export const RegisterDashboard: FC = () => {
     const [loading, setLoading] = useState(true)
     const [isInitialized, setIsInitialized] = useState(false)
+    const [openNewDashboardDialog, setOpenNewDashboardDialog] = useState(true)
 
     requestAPI<IsInitializedResponse>(`/api/is_initialized`, {
         method: 'GET',
     }).then((res) => {
-        setIsInitialized(res.is_initialized)
+        setOpenNewDashboardDialog(!res.is_initialized)
         setLoading(false)
     }).catch((err) => {
         console.log(err)
@@ -35,16 +36,19 @@ export const RegisterDashboard: FC = () => {
                 <CircularProgress />
             </Box>
         )
-    } else if (isInitialized) {
-        return (
-            <App />
-        )
-    } else {
+    }
+    else if (!isInitialized) {
         return (
             <InitDashboard
                 setIsInitialized={setIsInitialized}
                 setLoading={setLoading}
+                doesOpenDialog={openNewDashboardDialog}
             />
+        )
+    }
+    else {
+        return (
+            <App />
         )
     }
 }

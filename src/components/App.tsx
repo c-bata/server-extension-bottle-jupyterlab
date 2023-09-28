@@ -1,16 +1,16 @@
-import React, { FC, useMemo, useState, useEffect } from "react"
-import { RecoilRoot } from "recoil"
-import { MemoryRouter as Router, Routes, Route } from "react-router-dom"
-import { SnackbarProvider } from "notistack"
-import blue from "@mui/material/colors/blue"
-import pink from "@mui/material/colors/pink"
 import {
-  createTheme,
-  useMediaQuery,
-  ThemeProvider,
   Box,
   CssBaseline,
+  ThemeProvider,
+  createTheme,
+  useMediaQuery
 } from "@mui/material"
+import blue from "@mui/material/colors/blue"
+import pink from "@mui/material/colors/pink"
+import { SnackbarProvider } from "notistack"
+import React, { FC, useEffect, useMemo, useState } from "react"
+import { Route, MemoryRouter as Router, Routes } from "react-router-dom"
+import { RecoilRoot } from "recoil"
 
 import { CompareStudies } from "./CompareStudies"
 import { StudyDetail } from "./StudyDetail"
