@@ -3,7 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import React, { FC, useState } from 'react';
 import { requestAPI } from '../handler';
 import { App } from './App';
-import { InitDashboard } from './InitDashboard';
+import { InitializeDashboard } from './InitializeDashboard';
 
 
 interface IsInitializedResponse {
@@ -39,7 +39,7 @@ export const RegisterDashboard: FC = () => {
     }
     else if (!isInitialized) {
         return (
-            <InitDashboard
+            <InitializeDashboard
                 setIsInitialized={setIsInitialized}
                 setLoading={setLoading}
                 doesOpenDialog={openNewDashboardDialog}

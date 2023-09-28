@@ -18,13 +18,13 @@ import pink from "@mui/material/colors/pink";
 import { SnackbarProvider } from "notistack";
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from "react";
 import { RecoilRoot } from "recoil";
-import { requestAPI } from '.././handler';
+import { requestAPI } from '../handler';
 import { DebouncedInputTextField } from "./Debounce";
 
 
 
 
-export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>>, setLoading: Dispatch<SetStateAction<boolean>>, doesOpenDialog: boolean }> = ({ setIsInitialized, setLoading, doesOpenDialog }) => {
+export const InitializeDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>>, setLoading: Dispatch<SetStateAction<boolean>>, doesOpenDialog: boolean }> = ({ setIsInitialized, setLoading, doesOpenDialog }) => {
 
   const [storageURL, setStorageURL] = useState("")
   const [artifactPath, setArtifactPath] = useState("")
