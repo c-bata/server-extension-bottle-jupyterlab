@@ -103,7 +103,14 @@ export const InitDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boole
         >
           <SnackbarProvider maxSnack={3}>
             {!openNewDashboardDialog ?
-              <Box sx={{ display: "flex", width: "100%" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: 'center',
+                  flexWrap: 'wrap',
+                  width: "100%"
+                }}
+              >
                 <Button
                   variant="outlined"
                   onClick={handleOpenExistingDashboard}
