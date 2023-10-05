@@ -45,6 +45,7 @@ import { artifactIsAvailable } from "../state"
 import { actionCreator } from "../action"
 import { useDeleteArtifactDialog } from "./DeleteArtifactDialog"
 import { TrialFormWidgets } from "./TrialFormWidgets"
+import { AtomsArtifactViewer } from "./AtomsArtifactViewer"
 
 const states: TrialState[] = [
   "Complete",
@@ -509,6 +510,34 @@ const TrialArtifact: FC<{ trial: Trial }> = ({ trial }) => {
                     <DownloadIcon />
                   </IconButton>
                 </CardContent>
+              </Card>
+            )
+          } else if (
+            a.mimetype === "chemical/x-pdb" ||
+            a.mimetype === "chemical/x-mol2" ||
+            a.mimetype === "chemical/x-mdl-sdfile" ||
+            a.mimetype === "chemical/x-cif"
+          ) {
+            return (
+              <Card
+                key={a.artifact_id}
+                sx={{
+                  marginBottom: theme.spacing(2),
+                  display: "flex",
+                  flexDirection: "column",
+                  width: width,
+                  minHeight: "100%",
+                  margin: theme.spacing(0, 1, 1, 0),
+                }}
+              >
+                <AtomsArtifactViewer
+                  artifactId={a.artifact_id}
+                  src={`/${apiNamespace}/artifacts/${trial.study_id}/${trial.trial_id}/${a.artifact_id}`}
+                  width={"100%"}
+                  height={height}
+                  rotate={true}
+                  filetype={a.filename.split(".").pop()}
+              />
               </Card>
             )
           } else {
