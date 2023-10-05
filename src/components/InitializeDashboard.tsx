@@ -22,10 +22,7 @@ import { requestAPI } from '../handler';
 import { DebouncedInputTextField } from "./Debounce";
 
 
-
-
 export const InitializeDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction<boolean>>, setLoading: Dispatch<SetStateAction<boolean>>, doesOpenDialog: boolean }> = ({ setIsInitialized, setLoading, doesOpenDialog }) => {
-
   const [storageURL, setStorageURL] = useState("")
   const [artifactPath, setArtifactPath] = useState("")
   const [openNewDashboardDialog, setOpenNewDashboardDialog] = useState(doesOpenDialog)
@@ -76,6 +73,7 @@ export const InitializeDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction
         method: 'POST',
       }).then(() => {
         setIsInitialized(true)
+        setLoading(false)
       })
     }).catch((err) => {
       console.log(err)
@@ -130,14 +128,12 @@ export const InitializeDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction
                   Reset
                 </Button>
               </Box> : null}
-
             <Box sx={{ display: "flex" }}>
               <Dialog
                 open={openNewDashboardDialog}
                 onClose={() => {
                   handleCloseNewDashboardDialog()
                 }}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleCreateNewDashboard() }}
                 aria-labelledby="initialize-dashboard-dialog-title"
               >
                 <DialogTitle id="initialize-dashboard-dialog-title">New Dashboard</DialogTitle>
@@ -165,16 +161,13 @@ export const InitializeDashboard: FC<{ setIsInitialized: Dispatch<SetStateAction
                     }}
                     delay={500}
                     textFieldProps={{
-                      autoFocus: true,
                       fullWidth: true,
                       label: "Artifact path (Optional)",
                       type: "text",
                       sx: { margin: "4px 0" }
                     }}
-
                   />
                 </DialogContent>
-
                 <DialogActions>
                   <Button onClick={handleCloseNewDashboardDialog} color="primary">
                     Cancel

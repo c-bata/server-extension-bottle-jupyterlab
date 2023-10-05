@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { requestAPI } from '../handler';
 import { App } from './App';
 import { InitializeDashboard } from './InitializeDashboard';
@@ -15,14 +15,16 @@ export const RegisterDashboard: FC = () => {
     const [isInitialized, setIsInitialized] = useState(false)
     const [openNewDashboardDialog, setOpenNewDashboardDialog] = useState(true)
 
-    requestAPI<IsInitializedResponse>(`/api/is_initialized`, {
-        method: 'GET',
-    }).then((res) => {
-        setOpenNewDashboardDialog(!res.is_initialized)
-        setLoading(false)
-    }).catch((err) => {
-        console.log(err)
-    })
+    useEffect(() => {
+        requestAPI<IsInitializedResponse>(`/api/is_initialized`, {
+            method: 'GET',
+        }).then((res) => {
+            setOpenNewDashboardDialog(!res.is_initialized)
+            setLoading(false)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }, [])
 
     if (loading) {
         return (
@@ -36,8 +38,7 @@ export const RegisterDashboard: FC = () => {
                 <CircularProgress />
             </Box>
         )
-    }
-    else if (!isInitialized) {
+    } else if (!isInitialized) {
         return (
             <InitializeDashboard
                 setIsInitialized={setIsInitialized}
@@ -45,8 +46,7 @@ export const RegisterDashboard: FC = () => {
                 doesOpenDialog={openNewDashboardDialog}
             />
         )
-    }
-    else {
+    } else {
         return (
             <App />
         )
